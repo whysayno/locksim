@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="icon" href="/resource/image/favicon.ico" type="image/x-icon">
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="/plugin/layui-v2.6.6/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+        <!-- Form表单 -->
+        <div class="layui-col-md12">
+            <div style=" border: 1px solid #ebebeb; border-radius: 3px; transition: 0.2s; display: block; margin-top: 10px">
+                <div style="padding: 24px; display: block">
+                    <div style="display: block">
+                        <fieldset class="layui-elem-field layui-field-title">
+                            <legend>选择指令提交：</legend>
+                        </fieldset>
+                        <form class="layui-form" action="" lay-filter="thisForm">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">功能码</label>
+                                <div class="layui-input-block">
+                                    <select name="fun" lay-verify="required" lay-filter="funSelect">
+                                        <option value=""></option>
+                                        <option value="30">0x30 设备激活平台控制功能</option>
+                                        <option value="31">0x31 查询平台开锁密码</option>
+                                        <option value="32">0x32 查询平台缓存指令</option>
+                                        <option value="33">0x33 主动上报事件</option>
+                                        <option value="34">0x34 主动上报人脸图像</option>
+                                        <!--<option value="39">0x39 下发开锁指令</option>
+                                        <option value="40">0x40 下发锁死/解锁指令</option>-->
+                                        <option value="43">0x43 测试未开放指令</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="otherItem"></div>
+
+                            <div class="layui-form-item" id="imageItem" style="display: none">
+                                <label class="layui-form-label">上传人脸图像</label>
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn layui-btn-danger" id="elemImage">
+                                        <i class="layui-icon"></i>上传人脸图像[bmp jpg jpeg png gif]
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" id="btnSubmit" lay-submit lay-filter="*">立即提交</button>
+                                    <button type="button" class="layui-btn" id="btnUpload" style="display: none">立即提交
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- DeviceID -->
+                        <div id="DeviceID" style="display: none">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备编码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="DeviceID" value="niRFzwAAwUfT" lay-verify="required"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 0x30 -->
+                        <div id="cmd30" style="display: none">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备Mac地址</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="DeviceMac" value="10521c8553f0" lay-verify="required"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">验证码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="VerificationCode" value="043258" lay-verify="required"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 0x33 -->
+                        <div id="cmd33" style="display: none">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">事件类型</label>
+                                <div class="layui-input-block">
+                                    <select name="EventType" lay-verify="required" lay-filter="EventType">
+                                        <option value=""></option>
+                                        <option value="0">0x00 已锁上</option>
+                                        <option value="1">0x01 已打开</option>
+                                        <option value="2">0x02 报警</option>
+                                        <option value="3">0x03 远程开锁</option>
+                                        <option value="4">0x04 提醒</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">事件编号</label>
+                                <div class="layui-input-block">
+                                    <select name="EventCode" lay-verify="required" lay-filter="EventCode">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户类型</label>
+                                <div class="layui-input-block">
+                                    <select name="UserType" lay-verify="required" lay-filter="UserType">
+                                        <option value=""></option>
+                                        <option value="0">0x00 默认用户</option>
+                                        <option value="1">0x01 指纹用户</option>
+                                        <option value="2">0x02 密码用户</option>
+                                        <option value="3">0x03 IC卡用户</option>
+                                        <option value="4">0x04 钥匙用户</option>
+                                        <option value="5">0x05 手机用户</option>
+                                        <option value="6">0x06 人脸用户</option>
+                                        <option value="7">0x07 掌纹用户</option>
+                                        <option value="8">0x08 虹膜用户</option>
+                                        <option value="9">0x09 临时用户</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="UserID" value="1011" lay-verify="required"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 0x39 -->
+                        <div id="cmd39" style="display: none">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">时间戳</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="Timestamp" value="" lay-verify="required"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">签名-4</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="Sign" value="YKbf" lay-verify="required" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 0x40 -->
+                        <div id="cmd40" style="display: none">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">锁指令</label>
+                                <div class="layui-input-block">
+                                    <select name="Disable" lay-verify="required" lay-filter="Disable">
+                                        <option value=""></option>
+                                        <option value="0">0x00 解锁</option>
+                                        <option value="2">0x02 锁死</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 返回结果展示 -->
+        <div class="layui-col-md12">
+            <div style=" border: 1px solid #ebebeb; border-radius: 3px; transition: 0.2s; display: block; margin-top: 10px">
+                <div style="padding: 24px; display: block">
+                    <div style="display: block;height: 400px; overflow-y: auto;">
+                        <fieldset class="layui-elem-field layui-field-title">
+                            <legend>返回结果展示：</legend>
+                        </fieldset>
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"></i>
+                                <div class="layui-timeline-content layui-text" id="result">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 引入 layui.js -->
+<script src="/plugin/layui-v2.6.6/layui/layui.js"></script>
+<script>
+    var $ = layui.$;
+    var form = layui.form;
+    var upload = layui.upload;
+
+    //监听提交
+    form.on('submit(*)', function (d) {
+        $.ajax({
+            type: "post",
+            url: "/lock/send",
+            data: d.field,
+            dataType: "json",
+            success: function (e) {
+                appendResult(e);
+            },
+        });
+        return false;
+    });
+
+    $("#btnUpload").click(function () {
+        var fd = form.val('thisForm');
+        delete fd.file;
+        uploadInst.reload({
+            data: fd,
+        });
+        uploadInst.upload();
+    });
+
+    //图片上传
+    var uploadInst = upload.render({
+        elem: "#elemImage",
+        auto: false,
+        url: '/lock/send',
+        method: 'post',
+        exts: 'bmp|jpg|jpeg|png|gif',
+        //size: 60, //限制文件大小 单位KB
+        done: function (e) {
+            appendResult(e);
+        }
+    });
+
+    // 下拉指令改变事件
+    form.on('select(funSelect)', function (d) {
+        $("#fun").val(d.value);
+        var parent = $('#otherItem');
+        parent.hide();
+        parent.empty();
+        $('#btnUpload').hide();
+        $('#imageItem').hide();
+        $('#btnSubmit').show();
+        switch (d.value) {
+            case "30":
+                $("#cmd30").children().clone().appendTo(parent);
+                break;
+            case "31":
+                $("#DeviceID").children().clone().appendTo(parent);
+                break;
+            case "32":
+                $("#DeviceID").children().clone().appendTo(parent);
+                break;
+            case "33":
+                $("#DeviceID").children().clone().appendTo(parent);
+                $("#cmd33").children().clone().appendTo(parent);
+                break;
+            case "34":
+                $('#btnSubmit').hide();
+                $('#btnUpload').show();
+                $('#imageItem').show();
+                $("#DeviceID").children().clone().appendTo(parent);
+                break;
+            case "39":
+                $("#DeviceID").children().clone().appendTo(parent);
+                $("#cmd39").children().clone().appendTo(parent);
+                break;
+            case "40":
+                $("#DeviceID").children().clone().appendTo(parent);
+                $("#cmd39").children().clone().appendTo(parent);
+                $("#cmd40").children().clone().appendTo(parent);
+                break;
+            default:
+                parent.empty();
+        }
+        // 赋值时间戳
+        var ts = new Date().getTime();
+        $("[name='Timestamp']").val(ts);
+        form.render();
+        parent.slideDown();
+    });
+
+    // 事件下拉change
+    form.on('select(EventType)', function (d) {
+        var data = [];
+        switch (d.value) {
+            case "0": //已锁上
+            case "1": //已打开
+                data = [
+                    {text: "外门", val: "0"},
+                    {text: "内门", val: "1"},
+                ];
+                break;
+            case "2": //报警
+                data = [
+                    {text: "智能锁被撬", val: "0"},
+                    {text: "强行开门", val: "1"},
+                    {text: "指纹尝试开锁被冻结", val: "2"},
+                    {text: "密码尝试开锁被冻结", val: "3"},
+                    {text: "卡尝试开锁被冻结", val: "4"},
+                    {text: "钥匙尝试开锁被冻结", val: "5"},
+                    {text: "遥控尝试开锁被冻结", val: "6"},
+                    {text: "保留", val: "7"},
+                    {text: "胁迫开锁报警", val: "8"},
+                    {text: "特斯拉开锁报警", val: "9"},
+                    {text: "任意开锁被冻结", val: "A"},
+                    {text: "人脸尝试开锁报警", val: "B"},
+                    {text: "掌纹尝试开锁报警", val: "C"},
+                    {text: "陌生人逗留报警", val: "D"},
+                    {text: "火灾报警", val: "E"},
+                    {text: "门口有陌生人", val: "F"},
+                    {text: "非活体人脸", val: "10"},
+                    {text: "被人劫持", val: "11"},
+                    {text: "被人尾随", val: "12"},
+                    {text: "门口有人徘徊", val: "13"},
+                    {text: "指纹尝试开锁报警", val: "14"},
+                    {text: "密码尝试开锁报警", val: "15"},
+                    {text: "卡尝试开锁报警", val: "16"},
+                    {text: "系统锁定报警", val: "17"},
+                ];
+                break;
+            case "3": //远程开锁
+                data = [
+                    {text: "App开锁", val: "0"},
+                    {text: "平台开锁", val: "1"},
+                ];
+                break;
+            case "4": //提醒
+                data = [
+                    {text: "忘拔钥匙", val: "0"},
+                    {text: "锁门提醒", val: "1"},
+                    {text: "敲门提醒", val: "2"},
+                    {text: "求救提醒", val: "3"},
+                    {text: "门没关好", val: "4"},
+                    {text: "门已反锁", val: "5"},
+                    {text: "门已解锁", val: "6"},
+                    {text: "常开已开启", val: "7"},
+                    {text: "电量低压提醒", val: "8"},
+                    {text: "添加用户", val: "9"},
+                    {text: "删除用户", val: "A"},
+                    {text: "用户初始化", val: "B"},
+                    {text: "门铃提醒", val: "C"},
+                    {text: "删除全部用户", val: "D"},
+                    {text: "门已锁定", val: "E"},
+                    {text: "门已解锁", val: "F"},
+                ];
+                break;
+        }
+        AssignSelect($('#otherItem').find("select[name='EventCode']"), data);
+    });
+
+    // 往返回结果增加内容
+    function appendResult(msg) {
+        var node = document.createElement("div");
+        node.innerHTML = JSON.stringify(msg);
+        node.className = 'layui-timeline-title';
+        document.getElementById("result").appendChild(node);
+    }
+
+    // 赋值下拉框
+    function AssignSelect(obj, data) {
+        obj.empty() //清除原有数据避免重复添加
+        obj.append(new Option("", ""))
+        $.each(data, function (index, item) {
+            obj.append(new Option(item.text, item.val))
+        })
+        form.render('select')
+    }
+</script>
+</body>
+</html>
