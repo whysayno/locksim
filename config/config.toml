@@ -1,0 +1,28 @@
+# HTTP Server
+[server]
+Address = ":8199"
+ServerRoot = "public"
+ServerAgent = "locksim"
+LogPath = "log/server"
+LogStdout = false
+ErrorStack = false
+
+# Logger.
+[logger]
+path = "log"
+level = "all"
+stdout = false
+
+[logger.socket]
+path = "log/socket"
+level = "all"
+stdout = false
+stStatus = 0
+
+# Template.
+[viewer]
+Path = "template"
+DefaultFile = "index.html"
+
+[locker]
+address = "192.168.1.101:8090"
