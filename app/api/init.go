@@ -1,9 +1,8 @@
 package api
 
 import (
-	"github.com/gogf/gf/os/gcfg"
-	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/frame/g"
 )
 
-var logger = glog.Instance()
-var config = gcfg.Instance()
+var logger = g.Log("api")
+var config = g.Cfg().GetJson("locker")

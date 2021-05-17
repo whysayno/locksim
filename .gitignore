@@ -19,3 +19,4 @@ gf-empty
 .vscode
 go.sum
 /log
+/locksim.exe

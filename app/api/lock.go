@@ -1,8 +1,6 @@
 package api
 
 import (
-	"bytes"
-	"encoding/base64"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/util/gconv"
 	"locksim/app/clients"
@@ -13,8 +11,17 @@ var Lock = lockApi{}
 
 type lockApi struct{}
 
+// @summary 执行报文发送
+// @tags    锁端向应用程序发送报文
+// @produce json
+// @Param fun query int false "功能码" minimum(30) maximum(44)
+// @router  /lock/send [POST]
+// @success 200 {object} response.JsonResponse "执行结果"
 func (a *lockApi) Send(r *ghttp.Request) {
 	fun := r.Get("fun")
+	if fun == nil {
+		response.JsonExit(r, 1, "miss argument fun")
+	}
 	clock := new(clients.LockCmd)
 	clock.CmdType = gconv.String(fun)
 	var err error
@@ -50,20 +57,4 @@ func (a *lockApi) Send(r *ghttp.Request) {
 	} else {
 		response.JsonExit(r, 0, "success", res)
 	}
-}
-
-func (a *lockApi) Upload(r *ghttp.Request) {
-	file := r.GetUploadFile("file")
-	ctp := file.Header["Content-Type"][0]
-
-	f, err := file.Open()
-	if err != nil {
-		r.Response.WriteExit(err)
-	}
-	defer f.Close()
-	buff := &bytes.Buffer{}
-	buff.ReadFrom(f)
-
-	res := base64.StdEncoding.EncodeToString(buff.Bytes())
-	r.Response.WriteExit("data:" + ctp + ";base64," + res)
 }
